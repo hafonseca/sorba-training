@@ -1,0 +1,231 @@
+[
+    {
+        "id": "ef94fb737364734a",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "2fcda236a05af87c",
+        "type": "function",
+        "z": "ef94fb737364734a",
+        "name": "Esteira 1",
+        "func": "msg.payload = {\n    \"velocidade\": 5 + 1*Math.sin(msg.payload/10000) + 0.5*Math.sin(msg.payload/1000) + 0.25*Math.sin(msg.payload/100),\n    \"temperatura\": 100 + 2*Math.cos(msg.payload/10000)\n}\n\nlet anomaly = global.get('anomalyState') || false;\n\nif(anomaly)\n{\n    msg.payload.velocidade += 5;\n    msg.payload.temperatura -= 30;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 40,
+        "wires": [
+            [
+                "5ffa8447b0c5a2b9"
+            ]
+        ]
+    },
+    {
+        "id": "79aac7c8e367e3e2",
+        "type": "inject",
+        "z": "ef94fb737364734a",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 80,
+        "wires": [
+            [
+                "2fcda236a05af87c",
+                "35e391c525b5fd75"
+            ]
+        ]
+    },
+    {
+        "id": "5ffa8447b0c5a2b9",
+        "type": "mqtt out",
+        "z": "ef94fb737364734a",
+        "name": "",
+        "topic": "forno1/esteira1/",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "5dd8981b5e86c003",
+        "x": 460,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "35e391c525b5fd75",
+        "type": "function",
+        "z": "ef94fb737364734a",
+        "name": "Esteira 2",
+        "func": "msg.payload = {\n    \"velocidade\": 6 + 0.8*Math.sin(msg.payload/10000) + 0.4*Math.sin(msg.payload/1000) + 0.1*Math.sin(msg.payload/100),\n    \"temperatura\": 105 + 10*Math.cos(msg.payload/10000)\n}\n\nlet anomaly = global.get('anomalyState') || false;\n\nif (anomaly) {\n    msg.payload.velocidade += 1;\n    msg.payload.temperatura -= 5;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 120,
+        "wires": [
+            [
+                "a94fa6ea78a692bc"
+            ]
+        ]
+    },
+    {
+        "id": "a94fa6ea78a692bc",
+        "type": "mqtt out",
+        "z": "ef94fb737364734a",
+        "name": "",
+        "topic": "forno1/esteira2/",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "5dd8981b5e86c003",
+        "x": 460,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "1b331220e4d2ebb0",
+        "type": "function",
+        "z": "ef94fb737364734a",
+        "name": "function 1",
+        "func": "let currentState = global.get('anomalyState') || false;\n\ncurrentState = !currentState;\n\nif (currentState) {\n    node.status({ fill: \"red\", shape: \"dot\", text: \"Anomalia ligada\" });\n} else {\n    node.status({ fill: \"green\", shape: \"dot\", text: \"Anomalia desligada\" });\n}\n\n\nglobal.set('anomalyState', currentState);",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ebc3f48bf6698bd5",
+        "type": "inject",
+        "z": "ef94fb737364734a",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 220,
+        "wires": [
+            [
+                "1b331220e4d2ebb0"
+            ]
+        ]
+    },
+    {
+        "id": "87901508e1b122c3",
+        "type": "debug",
+        "z": "ef94fb737364734a",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "9a593fac3f0d2ac5",
+        "type": "mqtt in",
+        "z": "ef94fb737364734a",
+        "name": "",
+        "topic": "#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "5dd8981b5e86c003",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 650,
+        "y": 60,
+        "wires": [
+            [
+                "87901508e1b122c3"
+            ]
+        ]
+    },
+    {
+        "id": "5dd8981b5e86c003",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
